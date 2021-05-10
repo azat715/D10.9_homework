@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "d10.9_homework"
+version = "0.1.0"
+description = ""
+authors = ["azat715 <azat715@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "^3.2.2"
+
+[tool.poetry.dev-dependencies]
+black = "^21.5b0"
+pylint = "^2.8.2"
+pytest = "^6.2.4"
+pytest-django = "^4.2.0"
+isort = "^5.8.0"
+pylint-django = "^2.4.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
