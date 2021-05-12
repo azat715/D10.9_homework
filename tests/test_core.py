@@ -134,7 +134,8 @@ def test_select_car(content, query_or, select_check):
     assert select.__repr__() == select_check.__repr__()
 
 
-@pytest.mark.skipif(True, reason="экспорт базы в fixture.json")
+@pytest.mark.django_db
+@pytest.mark.skipif(False, reason="экспорт базы в fixture.json")
 def test_fixture_to_json(content):
     with open("fixture.json", "w") as f:
         f.write(serialize("json", list(Car.objects.all())))
