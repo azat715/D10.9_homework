@@ -136,6 +136,7 @@ def test_select_car(content, query_or, select_check):
 
 @pytest.mark.django_db
 @pytest.mark.skipif(False, reason="экспорт базы в fixture.json")
-def test_fixture_to_json(content):
-    with open("fixture.json", "w") as f:
-        f.write(serialize("json", list(Car.objects.all())))
+def test_fixture_to_json(content, django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        with open("fixture.json", "w") as f:
+            f.write(serialize("json", list(Car.objects.all())))
