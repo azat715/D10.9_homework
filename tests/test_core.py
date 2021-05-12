@@ -1,5 +1,7 @@
 import pytest
 from django.core.exceptions import ValidationError
+from django.http import QueryDict
+from django.db.models import Q
 
 from core.models import Car, TransmissionType
 from .conftest import content
@@ -36,3 +38,84 @@ def test_create_car():
 def test_fixture_db(content):
     cars = Car.objects.count()
     assert cars == 6
+
+
+# @pytest.fixture()
+# def query_simple():
+#     return QueryDict(
+#         "manufacturer=AVTOVAZ&model=Vesta&year=2019&transmission=3&color=orange"
+#     )
+
+
+# @pytest.fixture()
+# def query_or():
+#     return QueryDict("model=Vesta_or_Granta")
+
+
+# # @pytest.fixture()
+# # def query_fixture():
+# #     return QueryDict("model=Vesta&year=2019")
+
+
+# @pytest.mark.django_db
+# def test_select_car(content, query_simple):
+#     select = Car.objects.select_car(query_simple)
+#     select_check = Car.objects.filter(
+#         manufacturer="AVTOVAZ", model="Vesta", year=2019, transmission=3, color="orange"
+#     )
+#     assert select.__repr__() == select_check.__repr__()
+
+
+# @pytest.mark.django_db
+# def test_select_car_q(content, query_or):
+#     select = Car.objects.select_car(query_or)
+#     select_check = Car.objects.filter((Q(model="Vesta") | Q(model="Granta")))
+#     print(select)
+#     assert False
+#     # assert select.__repr__() == select_check.__repr__()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "query_or,select_check",
+    [
+        (
+            QueryDict(
+                "manufacturer=AVTOVAZ&model=Vesta&year=2019&transmission=3&color=orange"
+            ),
+            Car.objects.filter(
+                manufacturer="AVTOVAZ",
+                model="Vesta",
+                year=2019,
+                transmission=3,
+                color="orange",
+            ),
+        ),
+        (
+            QueryDict("model=Vesta_or_Granta"),
+            Car.objects.filter((Q(model="Vesta") | Q(model="Granta"))),
+        ),
+        (
+            QueryDict("manufacturer=AVTOVAZ&transmission=2_or_3"),
+            Car.objects.filter(
+                (Q(transmission=2) | Q(transmission=3)), manufacturer="AVTOVAZ"
+            ),
+        ),
+        (
+            QueryDict("manufacturer=AVTOVAZ_or_Kia&transmission=2"),
+            Car.objects.filter(
+                (Q(manufacturer="AVTOVAZ") | Q(manufacturer="Kia")), transmission=2
+            ),
+        ),
+        (
+            QueryDict("manufacturer=AVTOVAZ_or_Kia&year=2020_or_2021"),
+            Car.objects.filter(
+                Q(manufacturer="AVTOVAZ") | Q(manufacturer="Kia"),
+                Q(year=2020) | Q(year=2021),
+            ),
+        ),
+    ],
+)
+def test_select_car(content, query_or, select_check):
+    select = Car.objects.select_car(query_or)
+    assert select.__repr__() == select_check.__repr__()
