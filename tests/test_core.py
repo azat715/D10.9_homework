@@ -2,6 +2,7 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.http import QueryDict
 from django.db.models import Q
+from django.core.serializers import serialize
 
 from core.models import Car, TransmissionType
 from .conftest import content
@@ -131,3 +132,9 @@ def test_car_fields_value(content):
 def test_select_car(content, query_or, select_check):
     select = Car.objects.select_car(query_or)
     assert select.__repr__() == select_check.__repr__()
+
+
+@pytest.mark.skipif(True, reason="экспорт базы в fixture.json")
+def test_fixture_to_json(content):
+    with open("fixture.json", "w") as f:
+        f.write(serialize("json", list(Car.objects.all())))
