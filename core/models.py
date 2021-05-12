@@ -21,6 +21,20 @@ class CarSelectManager(models.Manager):
             return q_query.filter(**options)
         return self.filter(**options)
 
+    def fields_value(self):
+        cars = self.all()
+        return {
+            "manufacturer": [
+                item[0] for item in cars.values_list("manufacturer").distinct()
+            ],
+            "model": [item[0] for item in cars.values_list("model").distinct()],
+            "year": [item[0] for item in cars.values_list("year").distinct()],
+            "transmission": [
+                item[0] for item in cars.values_list("transmission").distinct()
+            ],
+            "color": [item[0] for item in cars.values_list("color").distinct()],
+        }
+
 
 class TransmissionType(models.IntegerChoices):
     MANUAL = 1, "Manual"

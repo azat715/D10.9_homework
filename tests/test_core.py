@@ -40,6 +40,18 @@ def test_fixture_db(content):
     assert cars == 6
 
 
+@pytest.mark.django_db
+def test_car_fields_value(content):
+    cars = Car.objects.fields_value()
+    assert cars == {
+        "manufacturer": ["AVTOVAZ", "Kia"],
+        "model": ["Granta", "Vesta", "X Ray", "Rio", "Ceed"],
+        "year": [2020, 2019, 2021],
+        "transmission": [2, 3, 1],
+        "color": ["red", "orange", "yellow", "green", "blue", "cyan"],
+    }
+
+
 # @pytest.fixture()
 # def query_simple():
 #     return QueryDict(
