@@ -9,8 +9,8 @@ class CarSelectManager(models.Manager):
         for key in ("manufacturer", "model", "year", "transmission", "color"):
             value = query_string.get(key)
             if value:
-                if "_or_" in value:
-                    one, two = value.split("_or_")
+                if "_OR_" in value:
+                    one, two = value.split("_OR_")
                     if q_query:
                         q_query = q_query.filter(Q(**{key: one}) | Q(**{key: two}))
                     else:
@@ -29,9 +29,6 @@ class CarSelectManager(models.Manager):
             ],
             "model": [item[0] for item in cars.values_list("model").distinct()],
             "year": [item[0] for item in cars.values_list("year").distinct()],
-            "transmission": [
-                item[0] for item in cars.values_list("transmission").distinct()
-            ],
             "color": [item[0] for item in cars.values_list("color").distinct()],
         }
 

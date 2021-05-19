@@ -1,0 +1,169 @@
+{% extends "./base.html" %}
+
+{% block content %}
+
+<h2>Выбор авто</h2>
+
+<div x-data="selectForm()" >
+    <form action="" @submit.prevent="show()">
+        <fieldset>
+            <label for="manufacturer">Производитель:</label>
+            <select x-model="data.manufacturer.fieids[0]">
+                <option value="">None</option>
+                {% for item in manufacturer %}
+                <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+            <select x-model="data.manufacturer.operand">
+                <option value="">None</option>
+                <option value="OR">Или</option>
+            </select>
+            <select x-model="data.manufacturer.fieids[1]" x-bind:disabled="!data.manufacturer.operand" required>
+                <option value="">None</option>
+                {% for item in manufacturer %}
+                <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </fieldset>
+        <fieldset>
+            <label for="year">Год:</label>
+            <select x-model="data.year.fieids[0]">
+                <option value="">None</option>
+                {% for item in year %}
+                <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+            <select x-model="data.year.operand">
+                <option value="">None</option>
+                <option value="OR">Или</option>
+            </select>
+            <select x-model="data.year.fieids[1]" x-bind:disabled="!data.year.operand" required>
+                <option value="">None</option>
+                {% for item in year %}
+                <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </fieldset>
+        <fieldset>
+            <label for="transmission">Трансмиссия:</label>
+            <select x-model="data.transmission.fieids[0]">
+                <option value="">None</option>
+                <option value="1">Manual</option>
+                <option value="2">Automatic</option>
+                <option value="2">CVT</option>
+            </select>
+            <select x-model="data.transmission.operand">
+                <option value="">None</option>
+                <option value="OR">Или</option>
+            </select>
+            <select x-model="data.transmission.fieids[1]" x-bind:disabled="!data.transmission.operand" required>
+                <option value="">None</option>
+                <option value="1">Manual</option>
+                <option value="2">Automatic</option>
+                <option value="2">CVT</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <label for="color">Цвет:</label>
+            <select x-model="data.color.fieids[0]">
+                <option value="">None</option>
+                {% for item in color %}
+                <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+            <select x-model="data.color.operand">
+                <option value="">None</option>
+                <option value="OR">Или</option>
+            </select>
+            <select x-model="data.color.fieids[1]" x-bind:disabled="!data.color.operand" required>
+                <option value="">None</option>
+                {% for item in color %}
+                <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <input type="submit" value="Submit">
+    </form>
+    <template x-if="err">
+        <p>Ошибка, выберите условие</p>
+    </template>
+    <ul>
+        <template x-if="response" x-for="item in response" :key="item">
+            <li>
+                <span x-text="item.manufacturer"></span> 
+                <span x-text="item.model"></span> 
+                <span x-text="item.year"></span> 
+                <span x-text="item.transmission"></span> 
+                <span x-text="item.color"></span>     
+            </li>
+        </template>
+    </ul> 
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    
+    function selectForm() {
+        console.log("test")
+        return {
+            data: {
+                manufacturer: {
+                    fieids: [],
+                    operand: '',
+                },
+                model: {
+                    fieids: [],
+                    operand: '',
+                },
+                year: {
+                    fieids: [],
+                    operand: '',
+                },
+                transmission: {
+                    fieids: [],
+                    operand: '',
+                },
+                color: {
+                    fieids: [],
+                    operand: '',
+                },
+            },
+            err: false,
+            response: null,
+            show() {
+                let params = new URLSearchParams();
+                for (const key in this.data) {
+                    if (this.data[key].fieids[0]) {
+                        if (this.data[key].operand) {
+                            params.append(key, `${this.data[key].fieids[0]}_${this.data[key].operand}_${this.data[key].fieids[1]}`)
+                        } else {
+                            params.append(key, `${this.data[key].fieids[0]}`)
+                        }
+                    }
+                };
+                if (!params.toString()) {
+                    this.err = true;
+                    console.log(this.err)
+                    return false;
+                } else {
+                    this.err = false;
+                }
+                fetch('?' + params)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    this.response = data
+                    console.log(this.response)
+                    console.log(typeof this.response);
+                });
+            },
+        }
+    }
+
+</script>
+
+{% endblock %}

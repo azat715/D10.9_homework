@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 
 from core.models import Car
 
@@ -8,9 +9,7 @@ from core.models import Car
 def main_view(request):
     if request.method == "GET":
         if request.GET:
-            pass
+            data = list(Car.objects.select_car(request.GET).values())
+            return JsonResponse(data, safe=False)
         else:
-            print(Car.objects.fields_value())
             return render(request, "car_select.html", {**Car.objects.fields_value()})
-    elif request.method == "POST":
-        pass

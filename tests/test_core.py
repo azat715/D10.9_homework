@@ -48,7 +48,6 @@ def test_car_fields_value(content):
         "manufacturer": ["AVTOVAZ", "Kia"],
         "model": ["Granta", "Vesta", "X Ray", "Rio", "Ceed"],
         "year": [2020, 2019, 2021],
-        "transmission": [2, 3, 1],
         "color": ["red", "orange", "yellow", "green", "blue", "cyan"],
     }
 
@@ -62,7 +61,7 @@ def test_car_fields_value(content):
 
 # @pytest.fixture()
 # def query_or():
-#     return QueryDict("model=Vesta_or_Granta")
+#     return QueryDict("model=Vesta_OR_Granta")
 
 
 # # @pytest.fixture()
@@ -105,23 +104,23 @@ def test_car_fields_value(content):
             ),
         ),
         (
-            QueryDict("model=Vesta_or_Granta"),
+            QueryDict("model=Vesta_OR_Granta"),
             Car.objects.filter((Q(model="Vesta") | Q(model="Granta"))),
         ),
         (
-            QueryDict("manufacturer=AVTOVAZ&transmission=2_or_3"),
+            QueryDict("manufacturer=AVTOVAZ&transmission=2_OR_3"),
             Car.objects.filter(
                 (Q(transmission=2) | Q(transmission=3)), manufacturer="AVTOVAZ"
             ),
         ),
         (
-            QueryDict("manufacturer=AVTOVAZ_or_Kia&transmission=2"),
+            QueryDict("manufacturer=AVTOVAZ_OR_Kia&transmission=2"),
             Car.objects.filter(
                 (Q(manufacturer="AVTOVAZ") | Q(manufacturer="Kia")), transmission=2
             ),
         ),
         (
-            QueryDict("manufacturer=AVTOVAZ_or_Kia&year=2020_or_2021"),
+            QueryDict("manufacturer=AVTOVAZ_OR_Kia&year=2020_OR_2021"),
             Car.objects.filter(
                 Q(manufacturer="AVTOVAZ") | Q(manufacturer="Kia"),
                 Q(year=2020) | Q(year=2021),
