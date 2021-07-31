@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
+from os import environ
+
+env = environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-zser$gx*p(-!pc%!8-k*vs+25opjc-_b0!u(=u65nzz(!rg^37"
+SECRET_KEY = env["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(env.get("DJANGO_DEBUG", True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["178.154.241.94"]
 
 
 # Application definition
@@ -74,10 +78,16 @@ WSGI_APPLICATION = "select_car.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+DB_PASS = env["DB_PASS"]
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        'NAME': "django",
+        'USER': "django",
+        'PASSWORD': DB_PASS,
+        'HOST': "localhost",
+        'PORT': "5432",
     }
 }
 
