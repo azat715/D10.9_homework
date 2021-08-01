@@ -29,7 +29,7 @@ SECRET_KEY = env["DJANGO_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(env.get("DJANGO_DEBUG", True))
 
-ALLOWED_HOSTS = ["178.154.241.94"]
+ALLOWED_HOSTS = ["178.154.241.94", "localhost"]
 
 
 # Application definition
@@ -135,4 +135,4 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-STATICFILES_DIRS = [BASE_DIR.joinpath("static")]
+STATIC_ROOT = "/home/user/D10.9_homework/static"

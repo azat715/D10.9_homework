@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=user
+Group=user
+WorkingDirectory=/home/user/D10.9_homework
+ExecStart=/home/user/D10.9_homework/.venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 2 \
+          --bind unix:/run/gunicorn.sock \
+          select_car.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

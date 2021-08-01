@@ -107,7 +107,6 @@
 <script type="text/javascript">
     
     function selectForm() {
-        console.log("test")
         return {
             data: {
                 manufacturer: {
@@ -146,7 +145,6 @@
                 };
                 if (!params.toString()) {
                     this.err = true;
-                    console.log(this.err)
                     return false;
                 } else {
                     this.err = false;
@@ -157,8 +155,6 @@
                 })
                 .then((data) => {
                     this.response = data
-                    console.log(this.response)
-                    console.log(typeof this.response);
                 });
             },
         }
